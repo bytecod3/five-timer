@@ -4,6 +4,32 @@ from PIL import Image, ImageTk
 from tkinter import ttk
 
 
+class NumericEntry(Entry):
+    """
+    Numeric entry are a class of value entries which do not allow non-numeric values to be entered
+    """
+    def __init__(self, master, **kw):
+        super().__init__(master, **kw)
+        self.configure(validate='all', validatecommand=(self.register(self._numeric_validator), "%P"))
+
+    @staticmethod
+    def _numeric_validator(value):
+        """
+        Verifies that the value is a valid floating point number
+        :param value: String value to be checked
+        :return: True if valid otherwise false
+        """
+        if value == '':
+            # Allow complete deletion
+            return True
+        try:
+            float(value)
+            return True
+        except ValueError:
+            # If conversion fails then the value is not a valid float
+            return False
+
+
 class Main:
     def __init__(self, parent):
         self.myParent = parent
@@ -16,7 +42,7 @@ class Main:
         # capacitor range dictionary
         self.capacitor_range = {"F": 1, "mF": 0.001, "uF": 0.000001, "nF": 0.000000001, "pf": 0.000000000001}
 
-        #=========================MONOSTABLE MODE FRAME====================================#
+        # =========================MONOSTABLE MODE FRAME====================================#
         self.mono_frame = LabelFrame(self.myParent, text="Monostable Mode")
         self.mono_frame.grid(row=0, column=0, ipady=10)
 
@@ -26,178 +52,176 @@ class Main:
 
         self.mono_inputs = Label(self.mono_frame, text="INPUTS")
         self.mono_inputs.configure(background="gray", font="lucida", width=15)
-        self.mono_inputs.grid(row=1, column = 1, pady=4)
-        
+        self.mono_inputs.grid(row=1, column=1, pady=4)
+
         self.monostable_resistor = Label(self.mono_frame, text="R1")
         self.monostable_resistor.configure(font=("lucida", 12), width=15, background="gainsboro")
         self.monostable_resistor.grid(row=2, column=0)
-        
+
         # Choose resistor range
         self.r_combo = ttk.Combobox(self.mono_frame, values=["Ohms", "K", "M"])
         self.r_combo.current(0)
         self.r_combo.configure(width="6", font=("lucida", 12))
         self.r_combo.grid(row="2", column="2")
-        
-        
+
         self.monostable_capacitor = Label(self.mono_frame, text="C1")
         self.monostable_capacitor.configure(font=("lucida", 12), width=15, background="gainsboro")
-        self.monostable_capacitor.grid(row=3, column=0)  
-        
+        self.monostable_capacitor.grid(row=3, column=0)
+
         # Choose capacitor range
         self.mono_cap_combo = ttk.Combobox(self.mono_frame, values=["F", "mF", "uF", "nF", "pF"])
         self.mono_cap_combo.current(0)
         self.mono_cap_combo.configure(width="6", font=("lucida", 12))
         self.mono_cap_combo.grid(row="3", column="2")
-        
+
         # R1 entry 
-        self.monostable_resistor_entry = Entry(self.mono_frame)
+        self.monostable_resistor_entry = NumericEntry(self.mono_frame)
         self.monostable_resistor_entry.focus_set()
         self.monostable_resistor_entry.configure(font=("lucida", 12), background="slategray", width=15)
         self.monostable_resistor_entry.grid(row=2, column=1)
-        
+
         # C1 entry
-        self.monostable_capacitor_entry = Entry(self.mono_frame)
+        self.monostable_capacitor_entry = NumericEntry(self.mono_frame)
         self.monostable_capacitor_entry.configure(font=("lucida", 12), background="slategray", width=15)
         self.monostable_capacitor_entry.grid(row=3, column=1)
-        
+
         # calculate button
         self.mono_calculate = Button(self.mono_frame, text="Calculate", command=self.monostable)
         self.mono_calculate.configure(background="orange", font="lucidaconsole", relief=GROOVE, )
-        
-        self.mono_calculate.grid(row = 4, column = 1)
-        
+
+        self.mono_calculate.grid(row=4, column=1)
+
         self.mono_inputs = Label(self.mono_frame, text="OUTPUT")
         self.mono_inputs.configure(background="gray", font="lucida", width=15)
-        self.mono_inputs.grid(row=5, column= 1, pady=4, padx=10)
-        
+        self.mono_inputs.grid(row=5, column=1, pady=4, padx=10)
 
         # Display the time on
         self.mono_high_time = Label(self.mono_frame, text="Time On:")
         self.mono_high_time.configure(font=("lucida", 12), width=15, background="gainsboro")
-        self.mono_high_time.grid(row=6, column=0)        
-        
-        self.monostable_time_on = Entry(self.mono_frame)
+        self.mono_high_time.grid(row=6, column=0)
+
+        self.monostable_time_on = NumericEntry(self.mono_frame)
         self.monostable_time_on.configure(font=("lucida", 12), background="slategray", width=15)
-        self.monostable_time_on .grid(row=6, column=1, pady=2)
-        
-        
-        # ======================================ASTABLE MODE FRAME DESIGN===============================================#
+        self.monostable_time_on.grid(row=6, column=1, pady=2)
+
+        # ======================================ASTABLE MODE FRAME DESIGN==============================================#
         self.ast_frame = LabelFrame(self.myParent, text="Astable Mode")
         self.ast_frame.grid(row=2, column=0)
 
         self.btn = Label(self.ast_frame, text="INPUTS")
         self.btn.configure(font=("lucida", 12), background="gray", width=15)
         self.btn.grid(row=1, column=1, pady=4)
-        
+
         self.astable_resistor_one = Label(self.ast_frame, text="R1")
         self.astable_resistor_one.configure(font=("lucida", 12), background="gainsboro", width=15)
         self.astable_resistor_one.grid(row=2, column=0)
-        
+
         # Choose resistor one range
         self.r1_combo = ttk.Combobox(self.ast_frame, values=["Ohms", "K", "M"])
         self.r1_combo.current(0)
         self.r1_combo.configure(width="6", font=("lucida", 12))
         self.r1_combo.grid(row="2", column="2")
-        
+
         # resistor two label
         self.astable_resistor_two = Label(self.ast_frame, text="R2")
         self.astable_resistor_two.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.astable_resistor_two.grid(row=3, column=0)        
-        
+        self.astable_resistor_two.grid(row=3, column=0)
+
         # Choose resistor two range
         self.r2_combo = ttk.Combobox(self.ast_frame, values=["Ohms", "K", "M"])
         self.r2_combo.current(0)
         self.r2_combo.configure(width="6", font=("lucida", 12))
         self.r2_combo.grid(row="3", column="2")
-        
+
         # astable mode capacitor values
         self.astable_capacitor = Label(self.ast_frame, text="C1")
         self.astable_capacitor.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.astable_capacitor.grid(row=4, column=0)  
-        
+        self.astable_capacitor.grid(row=4, column=0)
+
         # R1 entry 
-        self.astable_resistor_one_entry = Entry(self.ast_frame)
+        self.astable_resistor_one_entry = NumericEntry(self.ast_frame)
         self.astable_resistor_one_entry.configure(font=("lucida", 12), background="slategray", width=15)
         self.astable_resistor_one_entry.grid(row=2, column=1)
-        
+
         # R2 entry 
-        self.astable_resistor_two_entry = Entry(self.ast_frame)
+        self.astable_resistor_two_entry = NumericEntry(self.ast_frame)
         self.astable_resistor_two_entry.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_resistor_two_entry.grid(row=3, column=1)        
-        
+        self.astable_resistor_two_entry.grid(row=3, column=1)
+
         # C1 entry
-        self.astable_capacitor_entry = Entry(self.ast_frame)
+        self.astable_capacitor_entry = NumericEntry(self.ast_frame)
         self.astable_capacitor_entry.configure(font=("lucida", 12), background="slategray", width=15)
         self.astable_capacitor_entry.grid(row=4, column=1)
-        
+
         # Choose capacitor range
         self.ast_cap_combo = ttk.Combobox(self.ast_frame, values=["F", "mF", "uF", "nF", "pF"])
         self.ast_cap_combo.current(0)
         self.ast_cap_combo.configure(width="6", font=("lucida", 12))
         self.ast_cap_combo.grid(row="4", column="2")
-        
+
         # calculate button
         self.ast_calculate = Button(self.ast_frame, text="Calculate", command=self.astable)
         self.ast_calculate.configure(font=("lucida", 12), background="orange", relief=GROOVE)
-        self.ast_calculate.grid(row = 5, column = 1)
+        self.ast_calculate.grid(row=5, column=1)
 
-        #==============astable outputs==========================3
+        # ==============astable outputs==========================3
         self.ast_inputs = Label(self.ast_frame, text="OUTPUTS")
         self.ast_inputs.configure(font=("lucida", 12), background="gray", width=15)
-        self.ast_inputs.grid(row=6, column = 1, pady=4)
-        
+        self.ast_inputs.grid(row=6, column=1, pady=4)
+
         # Display the frequency
         self.ast_freq = Label(self.ast_frame, text="Frequency:")
         self.ast_freq.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.ast_freq.grid(row=7, column=0)        
-        
-        self.astable_frequency = Entry(self.ast_frame)
+        self.ast_freq.grid(row=7, column=0)
+
+        self.astable_frequency = NumericEntry(self.ast_frame)
         self.astable_frequency.configure(font=("lucida", 12), background="slategray", width=15)
         self.astable_frequency.grid(row=7, column=1)
-        
-        #display the period
+
+        # display the period
         self.ast_period = Label(self.ast_frame, text="Period")
         self.ast_period.configure(font=("lucida", 12), background="gainsboro", width=15)
         self.ast_period.grid(row=8, column=0)
-        
-        self.astable_period = Entry(self.ast_frame)
+
+        self.astable_period = NumericEntry(self.ast_frame)
         self.astable_period.configure(font=("lucida", 12), background="slategray", width=15)
         self.astable_period.grid(row=8, column=1)
-        
+
         # display the duty cycle
         self.ast_duty = Label(self.ast_frame, text="Duty Cycle")
         self.ast_duty.configure(font=("lucida", 12), background="gainsboro", width=15)
         self.ast_duty.grid(row=9, column=0)
-        
-        self.astable_duty = Entry(self.ast_frame)
+
+        self.astable_duty = NumericEntry(self.ast_frame)
         self.astable_duty.configure(font=("lucida", 12), background="slategray", width=15)
         self.astable_duty.grid(row=9, column=1)
-        
+
         # display the time high 
         self.ast_time_high = Label(self.ast_frame, text="Time High")
         self.ast_time_high.configure(font=("lucida", 12), background="gainsboro", width=15)
         self.ast_time_high.grid(row=10, column=0)
-        
-        self.astable_time_high = Entry(self.ast_frame)
+
+        self.astable_time_high = NumericEntry(self.ast_frame)
         self.astable_time_high.configure(font=("lucida", 12), background="slategray", width=15)
         self.astable_time_high.grid(row=10, column=1)
-        
+
         # display the time low 
         self.ast_time_low = Label(self.ast_frame, text="Time Low")
         self.ast_time_low.configure(font=("lucida", 12), background="gainsboro", width=15)
         self.ast_time_low.grid(row=11, column=0)
-        
-        self.astable_time_low = Entry(self.ast_frame)
+
+        self.astable_time_low = NumericEntry(self.ast_frame)
         self.astable_time_low.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_time_low.grid(row=11, column=1)        
-        
+        self.astable_time_low.grid(row=11, column=1)
+
+
     def error_check(self, raw_value):
         """Check for errors in the inputed values and return the status"""
         alphabet = 'abcdefghijklmnopqrstuvwxyz'
         alphabet_upper = alphabet.upper()
 
         error_list = []
-        
+
         for digit in raw_value:
             if digit in alphabet or digit in alphabet_upper:
                 error_list.append(digit)
@@ -208,7 +232,6 @@ class Main:
             # showwarning(title="Error", message="Please enter numerical values only")
         else:
             return True
-
 
     def monostable(self):
         """
@@ -254,7 +277,6 @@ class Main:
 
             final_time_on = str(time_on) + " s"
             self.monostable_time_on.insert(0, final_time_on)
-
 
     def astable(self):
         """Calculate the values fro the astable mode"""
@@ -312,18 +334,18 @@ class Main:
             capacitor *= self.capacitor_range[cap_range]
 
             # frequency
-            raw_frequency = 1.44/((resistance_one + 2*resistance_two)*capacitor)
+            raw_frequency = 1.44 / ((resistance_one + 2 * resistance_two) * capacitor)
             raw_frequency = round(raw_frequency, 6)
             print(raw_frequency)
             frequency = str(raw_frequency) + " Hz"
 
             # period == reciprocal of frequency
-            raw_period = 1/raw_frequency
+            raw_period = 1 / raw_frequency
             raw_period = round(raw_period, 4)
             period = str(raw_period) + " s"
 
             # high time
-            raw_high_time = 0.694*(resistance_one + resistance_two)*capacitor
+            raw_high_time = 0.694 * (resistance_one + resistance_two) * capacitor
             raw_high_time = round(raw_high_time, 4)
             high_time = str(raw_high_time) + " s"
 
@@ -333,7 +355,7 @@ class Main:
             low_time = str(low_time) + " s"
 
             # duty cycle
-            duty = (raw_high_time/raw_period) * 100
+            duty = (raw_high_time / raw_period) * 100
             duty = round(duty, 4)
             duty = str(duty) + " %"
 
@@ -345,11 +367,7 @@ class Main:
             self.astable_time_low.insert(0, low_time)
 
 
-root = Tk()
-main = Main(root)
-root.mainloop()
-
-
-
-
-
+if __name__ == '__main__':
+    root = Tk()
+    main = Main(root)
+    root.mainloop()
