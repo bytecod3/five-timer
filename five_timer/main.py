@@ -5,6 +5,7 @@ from tkinter import ttk
 import os, sys, pathlib
 # print(*sys.modules, sep="\n")
 
+
 def get_resource_path(package, path):
     d = os.path.dirname(sys.modules[package].__file__)
     return os.path.join(pathlib.Path(d), pathlib.Path(path))
@@ -39,7 +40,7 @@ class NumericEntry(Entry):
 class Main:
     def __init__(self, parent):
         self.myParent = parent
-        self.myParent.title("555-TIMER-CALCULATOR")
+        self.myParent.title("five-timer")
         self.myParent.resizable(width=0, height=0)
 
         # resistor range dictionary
@@ -403,9 +404,9 @@ def initialize():
     root = Tk()
     main = Main(root)
 
-    # set app icon
-    #icon = ImageTk.PhotoImage(Image.open("./icon.png"))
-    #root.iconphoto(False, icon)
+    # setting window icon
+    icon = ImageTk.PhotoImage(Image.open(get_resource_path("five_timer", "resources/icon.jpg")))
+    root.iconphoto(False, icon)
 
     root.mainloop()
 
