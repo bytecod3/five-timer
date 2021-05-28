@@ -1,6 +1,4 @@
-# five-timer 
-
-![five-timer window](five_timer/resources/icon.jpg)
+# five-timer
 
 ## Introduction
 **five-timer** is a GUI tool that helps you calculate the output values from the NE555 timer IC for both the monostable and astable modes. It also provides you with
