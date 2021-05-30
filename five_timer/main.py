@@ -3,13 +3,24 @@ from tkinter.messagebox import *
 from PIL import Image, ImageTk
 from tkinter import ttk
 import os, sys, pathlib
-# print(*sys.modules, sep="\n")
 
 
 def get_resource_path(package, path):
     d = os.path.dirname(sys.modules[package].__file__)
     return os.path.join(pathlib.Path(d), pathlib.Path(path))
 
+
+class Styling:
+    """
+    Styling and themes
+    """
+    def __init__(self, parent):
+        self.mParent = parent
+        self.mParent.map(
+            "TButton",
+            foreground=[('pressed', 'green'), ('active', 'green')],
+            background=[('pressed', 'black'), ('active', 'red')]
+        )
 
 class NumericEntry(Entry):
     """
@@ -42,6 +53,8 @@ class Main:
         self.myParent = parent
         self.myParent.title("five-timer")
         self.myParent.resizable(width=0, height=0)
+
+        self.styles = Styling(ttk.Style)
 
         # resistor range dictionary
         self.resistor_range = {"Ohms": 1, "K": 1000, "M": 1000000}
@@ -104,6 +117,7 @@ class Main:
         # calculate button
         self.mono_calculate = Button(self.mono_frame, text="Calculate", command=self.monostable)
         self.mono_calculate.configure(background="orange", font="lucidaconsole", relief=GROOVE, )
+
 
         self.mono_calculate.grid(row=4, column=1)
 
@@ -409,6 +423,7 @@ def initialize():
     root.iconphoto(False, icon)
 
     root.mainloop()
+
 
 if __name__ == '__main__':
     initialize()
