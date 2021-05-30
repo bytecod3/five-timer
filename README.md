@@ -17,7 +17,7 @@ five-timer
 ```
 
 The tool will open as shown below:
-![five-timer window](static/five-timer.png)
+<!-- ![five-timer window](static/five-timer.png) -->
 
 ## Usage
 **Monostable Mode**  
