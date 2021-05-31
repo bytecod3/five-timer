@@ -52,16 +52,31 @@ class Main:
             "fg": "white",
             "font": ("sans-serif", 10),
             "width": 10,
+            "relief": FLAT
+        }
+
+        self.button_config = {
+            "bg": "#4a4a4a",
             "relief": FLAT,
         }
 
         self.myParent.config(bg="#303030")
 
         # resistor range dictionary
-        self.resistor_range = {"Ohms": 1, "K": 1000, "M": 1000000}
+        self.resistor_range = {
+            "Ohms": 1,
+            "K": 1000,
+            "M": 1000000
+        }
 
         # capacitor range dictionary
-        self.capacitor_range = {"F": 1, "mF": 0.001, "uF": 0.000001, "nF": 0.000000001, "pf": 0.000000000001}
+        self.capacitor_range = {
+            "F": 1,
+            "mF": 0.001,
+            "uF": 0.000001,
+            "nF": 0.000000001,
+            "pf": 0.000000000001
+        }
 
          # ==============MENU========================================================
         menubar = Menu(self.myParent)
@@ -79,178 +94,148 @@ class Main:
         # circuits_menu.add_command(label="monostable", self.open_monostable_circuit)
         # circuits_menu.add_command(label="astable", self.open_astable_circuit)
 
-
         self.myParent['menu'] = menubar
-
 
         # frames
         self.frame1 = Frame(self.myParent, bg="#303030")
 
         # frame 1
-        self.mono_inputs = Label(self.frame1, self.label_config, text="inputs")
-        self.mono_inputs.grid(row=1, column=1)
+        Label(self.frame1, self.label_config, text="Monostable mode", font=("bold")).grid(row=0, column=1)
 
-        self.monostable_resistor = Label(self.frame1, self.label_config, text="R1", anchor="e")
+        self.monostable_resistor = Label(self.frame1, self.label_config, text="R1:")
         self.monostable_resistor.config(width=2)
-        self.monostable_resistor.grid(row=2, column=0)
+        self.monostable_resistor.grid(row=2, column=0, pady=5, sticky="E")
 
         # Choose resistor range
-        self.r_combo = ttk.Combobox(self.frame1, values=["Ohms", "K", "M"])
+        self.r_combo = ttk.Combobox(self.frame1, state="readonly", values=["Ohms", "K", "M"])
         self.r_combo.current(0)
-        self.r_combo.configure(width="6", font=("lucida", 12))
-        self.r_combo.grid(row="2", column="2")
+        self.r_combo.configure(background="#4a4a4a", width=5)
+        self.r_combo.grid(row=2, column=2, pady=5, sticky="W")
 
-        self.monostable_capacitor = Label(self.frame1, self.label_config, text="C1")
-        self.monostable_capacitor.grid(row=3, column=0)
+        self.monostable_capacitor = Label(self.frame1, self.label_config, text="C1:")
+        self.monostable_capacitor.grid(row=3, column=0, pady=5, sticky="E")
 
         # Choose capacitor range
-        self.mono_cap_combo = ttk.Combobox(self.frame1, values=["F", "mF", "uF", "nF", "pF"])
+        self.mono_cap_combo = ttk.Combobox(self.frame1, state="readonly", values=["F", "mF", "uF", "nF", "pF"])
         self.mono_cap_combo.current(0)
-        self.mono_cap_combo.configure(width="6", font=("lucida", 12))
-        self.mono_cap_combo.grid(row="3", column="2")
+        self.mono_cap_combo.config(background="#4a4a4a", width=5)
+        self.mono_cap_combo.grid(row=3, column=2, pady=5, sticky="W")
 
         # R1 entry 
         self.monostable_resistor_entry = NumericEntry(self.frame1)
         self.monostable_resistor_entry.config(self.input_config)
         self.monostable_resistor_entry.focus_set()        
-        self.monostable_resistor_entry.grid(row=2, column=1)
+        self.monostable_resistor_entry.grid(row=2, column=1, pady=5)
 
         # C1 entry
         self.monostable_capacitor_entry = NumericEntry(self.frame1)
         self.monostable_capacitor_entry.config(self.input_config)
-        self.monostable_capacitor_entry.grid(row=3, column=1)
+        self.monostable_capacitor_entry.grid(row=3, column=1, pady=5)
 
         # calculate button
-        self.mono_calculate = Button(self.frame1, text="Calculate", command=self.monostable)
-        self.mono_calculate.configure(background="orange", font="lucidaconsole", relief=GROOVE, )
-
+        self.mono_calculate = Button(self.frame1, self.button_config, text="calculate", command=self.monostable)
         self.mono_calculate.grid(row=4, column=1)
-
-        self.mono_inputs = Label(self.frame1, text="OUTPUT")
-        self.mono_inputs.configure(background="gray", font="lucida", width=15)
-        self.mono_inputs.grid(row=5, column=1, pady=4, padx=10)
 
         # Display the time on
         self.mono_high_time = Label(self.frame1, self.label_config, text="time on:")
-        self.mono_high_time.grid(row=6, column=0)
+        self.mono_high_time.grid(row=5, column=0)
 
         self.monostable_time_on = Entry(self.frame1, self.input_config)
-        self.monostable_time_on.grid(row=6, column=1, pady=2)
+        self.monostable_time_on.grid(row=5, column=1, pady=5)
 
         self.frame1.grid(column=0, row=0)
 
         # end of frame1
     
         # frame 3
-        self.frame3 = ttk.LabelFrame(self.myParent, text="Astable Mode")
+        self.frame3 = Frame(self.myParent, background="#303030")
         
-        self.btn = Label(self.frame3, text="INPUTS")
-        self.btn.configure(font=("lucida", 12), background="gray", width=15)
-        self.btn.grid(row=1, column=1, pady=4)
-
-        self.astable_resistor_one = Label(self.frame3, text="R1")
-        self.astable_resistor_one.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.astable_resistor_one.grid(row=2, column=0)
+        Label(self.frame3, self.label_config, text="Astable mode", font=("bold")).grid(row=1, column=1)
+        self.astable_resistor_one = Label(self.frame3, self.label_config, text="R1:")
+        self.astable_resistor_one.grid(row=2, column=0, sticky="E", pady=5)
 
         # Choose resistor one range
-        self.r1_combo = ttk.Combobox(self.frame3, values=["Ohms", "K", "M"])
+        self.r1_combo = ttk.Combobox(self.frame3, state="readonly", values=["Ohms", "K", "M"])
         self.r1_combo.current(0)
-        self.r1_combo.configure(width="6", font=("lucida", 12))
-        self.r1_combo.grid(row="2", column="2")
+        self.r1_combo.config(width=5)
+        self.r1_combo.grid(row="2", column="2", sticky="W", pady=5)
 
         # resistor two label
-        self.astable_resistor_two = Label(self.frame3, text="R2")
-        self.astable_resistor_two.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.astable_resistor_two.grid(row=3, column=0)
+        self.astable_resistor_two = Label(self.frame3, self.label_config, text="R2:")
+        self.astable_resistor_two.grid(row=3, column=0, sticky="E", pady=5)
 
         # Choose resistor two range
-        self.r2_combo = ttk.Combobox(self.frame3, values=["Ohms", "K", "M"])
+        self.r2_combo = ttk.Combobox(self.frame3, state="readonly", values=["Ohms", "K", "M"])
         self.r2_combo.current(0)
-        self.r2_combo.configure(width="6", font=("lucida", 12))
-        self.r2_combo.grid(row="3", column="2")
+        self.r2_combo.config(width=5)
+        self.r2_combo.grid(row=3, column=2, pady=5)
 
         # astable mode capacitor values
-        self.astable_capacitor = Label(self.frame3, text="C1")
-        self.astable_capacitor.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.astable_capacitor.grid(row=4, column=0)
+        self.astable_capacitor = Label(self.frame3, self.label_config, text="C:")
+        self.astable_capacitor.grid(row=4, column=0, sticky="E", pady=5)
 
         # R1 entry 
         self.astable_resistor_one_entry = NumericEntry(self.frame3)
-        self.astable_resistor_one_entry.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_resistor_one_entry.grid(row=2, column=1)
+        self.astable_resistor_one_entry.configure(self.input_config)
+        self.astable_resistor_one_entry.grid(row=2, column=1, pady=5)
 
         # R2 entry 
         self.astable_resistor_two_entry = NumericEntry(self.frame3)
-        self.astable_resistor_two_entry.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_resistor_two_entry.grid(row=3, column=1)
+        self.astable_resistor_two_entry.configure(self.input_config)
+        self.astable_resistor_two_entry.grid(row=3, column=1, pady=5)
 
         # C1 entry
         self.astable_capacitor_entry = NumericEntry(self.frame3)
-        self.astable_capacitor_entry.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_capacitor_entry.grid(row=4, column=1)
+        self.astable_capacitor_entry.configure(self.input_config)
+        self.astable_capacitor_entry.grid(row=4, column=1, pady=5)
 
         # Choose capacitor range
-        self.ast_cap_combo = ttk.Combobox(self.frame3, values=["F", "mF", "uF", "nF", "pF"])
+        self.ast_cap_combo = ttk.Combobox(self.frame3, state="readonly", values=["F", "mF", "uF", "nF", "pF"])
         self.ast_cap_combo.current(0)
-        self.ast_cap_combo.configure(width="6", font=("lucida", 12))
-        self.ast_cap_combo.grid(row="4", column="2")
+        self.ast_cap_combo.configure(background="#4a4a4a", width=5)
+        self.ast_cap_combo.grid(row="4", column="2", sticky="W", pady=5)
 
         # calculate button
-        self.ast_calculate = Button(self.frame3, text="Calculate", command=self.astable)
-        self.ast_calculate.configure(font=("lucida", 12), background="orange", relief=GROOVE)
-        self.ast_calculate.grid(row=5, column=1)
+        self.ast_calculate = Button(self.frame3, self.button_config, text="Calculate", command=self.astable)
+        self.ast_calculate.grid(row=5, column=1, pady=5)
 
-        # ==============astable outputs==========================3
-        self.ast_inputs = Label(self.frame3, text="OUTPUTS")
-        self.ast_inputs.configure(font=("lucida", 12), background="gray", width=15)
-        self.ast_inputs.grid(row=6, column=1, pady=4)
-
+        # outputs
         # Display the frequency
-        self.ast_freq = Label(self.frame3, text="Frequency:")
-        self.ast_freq.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.ast_freq.grid(row=7, column=0)
+        self.ast_freq = Label(self.frame3, self.label_config, text="Frequency:")
+        self.ast_freq.grid(row=7, column=0, pady=5)
 
-        self.astable_frequency = Entry(self.frame3)
-        self.astable_frequency.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_frequency.grid(row=7, column=1)
+        self.astable_frequency = Entry(self.frame3, self.input_config)
+        self.astable_frequency.grid(row=7, column=1, pady=5)
 
         # display the period
-        self.ast_period = Label(self.frame3, text="Period")
-        self.ast_period.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.ast_period.grid(row=8, column=0)
+        self.ast_period = Label(self.frame3, self.label_config, text="Period: ")
+        self.ast_period.grid(row=8, column=0, pady=5)
 
-        self.astable_period = Entry(self.frame3)
-        self.astable_period.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_period.grid(row=8, column=1)
+        self.astable_period = Entry(self.frame3, self.input_config)
+        self.astable_period.grid(row=8, column=1, pady=5)
 
         # display the duty cycle
-        self.ast_duty = Label(self.frame3, text="Duty Cycle")
-        self.ast_duty.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.ast_duty.grid(row=9, column=0)
+        self.ast_duty = Label(self.frame3, self.label_config, text="Duty Cycle:")
+        self.ast_duty.grid(row=9, column=0, pady=5)
 
-        self.astable_duty = Entry(self.frame3)
-        self.astable_duty.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_duty.grid(row=9, column=1)
+        self.astable_duty = Entry(self.frame3, self.input_config)
+        self.astable_duty.grid(row=9, column=1, pady=5)
 
         # display the time high 
-        self.ast_time_high = Label(self.frame3, text="Time High")
-        self.ast_time_high.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.ast_time_high.grid(row=10, column=0)
+        self.ast_time_high = Label(self.frame3, self.label_config, text="Time High: ")
+        self.ast_time_high.grid(row=10, column=0, pady=5)
 
-        self.astable_time_high = Entry(self.frame3)
-        self.astable_time_high.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_time_high.grid(row=10, column=1)
+        self.astable_time_high = Entry(self.frame3, self.input_config)
+        self.astable_time_high.grid(row=10, column=1, pady=5)
 
         # display the time low 
-        self.ast_time_low = Label(self.frame3, text="Time Low")
-        self.ast_time_low.configure(font=("lucida", 12), background="gainsboro", width=15)
-        self.ast_time_low.grid(row=11, column=0)
+        self.ast_time_low = Label(self.frame3, self.label_config, text="Time Low: ")
+        self.ast_time_low.grid(row=11, column=0, pady=5)
 
-        self.astable_time_low = Entry(self.frame3)
-        self.astable_time_low.configure(font=("lucida", 12), background="slategray", width=15)
-        self.astable_time_low.grid(row=11, column=1)
+        self.astable_time_low = Entry(self.frame3, self.input_config)
+        self.astable_time_low.grid(row=11, column=1, pady=5)
 
-        self.frame3.grid(column=0, row=1)
+        self.frame3.grid(column=0, row=1, pady=5)
 
     def open_monostable_nomograph(self):
         """Open monostable nomograph from the 555 timer datasheet"""
