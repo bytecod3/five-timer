@@ -44,7 +44,7 @@ class Main:
         self.label_config = {
             "bg": "#303030",
             "fg": "#d9d9d9",
-            "font": ("sans-serif", 10)
+            "font": ("sans-serif", 10, "bold")
         }
 
         self.input_config = {
@@ -340,7 +340,8 @@ class Main:
 
             # frequency
             raw_frequency = 1.44 / (float(resistance_one) + 2 * float(resistance_two)) * float(capacitor)
-            print(raw_frequency)
+
+
             frequency = str(raw_frequency) + " Hz"
             # todo: convert frequency to engineering notation
 
@@ -386,10 +387,18 @@ class Main:
             self.astable_time_high.insert(0, high_time)
             self.astable_time_low.insert(0, low_time)
 
+    def engineering_notation(self, raw_value):
+        """
+        convert the given value to engineering notation
+        """
+        if raw_value >= 1000000:
+            return str(raw_value / 1000) + " K"
+        elif 1000 <= raw_value < 1000000:
+            return str(raw_value / 1000000) + "M"
+
     def error_msg(self):
         """Show error message"""
         showwarning(title="Error", message="Enter numerical values only")
-
 
 def initialize():
     root = Tk()
@@ -404,4 +413,3 @@ def initialize():
 
 if __name__ == '__main__':
     initialize()
-    
