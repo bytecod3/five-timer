@@ -267,24 +267,6 @@ class Main:
         pinout_label.image = pinout
         pinout_label.grid(row=1, column=0, padx=10)
 
-    def error_check(self, raw_value):
-        """Check for errors in the entered values and return the status"""
-        alphabet = 'abcdefghijklmnopqrstuvwxyz'
-        alphabet_upper = alphabet.upper()
-
-        error_list = []
-
-        for digit in raw_value:
-            if digit in alphabet or digit in alphabet_upper:
-                error_list.append(digit)
-
-        if len(error_list) != 0:
-            # warning box
-            return False
-            # showwarning(title="Error", message="Please enter numerical values only")
-        else:
-            return True
-
     def monostable(self):
         """
         Calculate the time on for the monostable mode
@@ -296,17 +278,9 @@ class Main:
 
         resistance = self.monostable_resistor_entry.get()
         capacitance = self.monostable_capacitor_entry.get()
-        resistance_status = self.error_check(resistance)
-        capacitance_status = self.error_check(capacitance)
-
-        if resistance_status is False:
-            showwarning(title="Error", message="Please enter numerical values only")
-
-        elif capacitance_status is False:
-            showwarning(title="Error", message="Please enter numerical values only")
 
         # check for empty entries
-        elif len(resistance) == 0:
+        if len(resistance) == 0:
             showwarning(title="Error", message="Resistor value required")
 
         elif len(capacitance) == 0:
@@ -338,23 +312,15 @@ class Main:
         resistance_two = self.astable_resistor_two_entry.get()
         capacitor = self.astable_capacitor_entry.get()
 
-        # check for invalid entries
-        r1_status = self.error_check(resistance_one)
-        r2_status = self.error_check(resistance_two)
-        cap_status = self.error_check(capacitor)
-
-        if r1_status | r2_status | cap_status is False:
-            self.error_msg()
-
         # check for empty entries
         if len(resistance_one) == 0:
-            showwarning(title="Error", message="Resistor one value required")
+            showwarning(title="Error", message="R1 value required")
 
         elif len(resistance_two) == 0:
-            showwarning(title="Error", message="Resistor two value required")
+            showwarning(title="Error", message="R2 value required")
 
         elif len(capacitor) == 0:
-            showwarning(title="Error", message="Capacitor value required")
+            showwarning(title="Error", message="C required")
 
         else:
             # if no error detected, process the inputs
@@ -373,8 +339,7 @@ class Main:
             capacitor *= self.capacitor_range[cap_range]
 
             # frequency
-            raw_frequency = 1.44 / ((resistance_one + 2 * resistance_two) * capacitor)
-            raw_frequency = round(raw_frequency, 4) # round to 4 decimal places
+            raw_frequency = 1.44 / (float(resistance_one) + 2 * float(resistance_two)) * float(capacitor)
             print(raw_frequency)
             frequency = str(raw_frequency) + " Hz"
             # todo: convert frequency to engineering notation
@@ -421,18 +386,10 @@ class Main:
             self.astable_time_high.insert(0, high_time)
             self.astable_time_low.insert(0, low_time)
 
-
     def error_msg(self):
         """Show error message"""
         showwarning(title="Error", message="Enter numerical values only")
 
-    def reverse_calculation(self):
-        """
-        use the output parameters to calculate the components needed
-        """
-        self.monostable_time_on.delete(0, END)
-
-        
 
 def initialize():
     root = Tk()
