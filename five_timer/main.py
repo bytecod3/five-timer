@@ -91,8 +91,8 @@ class Main:
 
         circuits_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(menu=circuits_menu, label="circuits")
-        # circuits_menu.add_command(label="monostable", self.open_monostable_circuit)
-        # circuits_menu.add_command(label="astable", self.open_astable_circuit)
+        circuits_menu.add_command(label="monostable", command =  self.open_monostable_circuit)
+        circuits_menu.add_command(label="astable",command =  self.open_astable_circuit)
 
         self.myParent['menu'] = menubar
 
@@ -266,6 +266,26 @@ class Main:
         pinout_label = Label(graph, image=pinout)
         pinout_label.image = pinout
         pinout_label.grid(row=1, column=0, padx=10)
+
+    def open_monostable_circuit(self):
+        """Open astable nomograph from the 555 timer datasheet"""
+        graph = Toplevel(self.myParent)
+        graph.title('Monostable circuit')
+
+        monostable_circuit = ImageTk.PhotoImage(Image.open(get_resource_path("five_timer", "resources/monostable_circuit.gif")))
+        monostable_circuit_label = Label(graph, image=monostable_circuit)
+        monostable_circuit_label.image = monostable_circuit
+        monostable_circuit_label.grid(row=1, column=0, padx=10)
+
+    def open_astable_circuit(self):
+        """Open astable nomograph from the 555 timer datasheet"""
+        graph = Toplevel(self.myParent)
+        graph.title('Astable circuit')
+
+        astable_circuit = ImageTk.PhotoImage(Image.open(get_resource_path("five_timer", "resources/astable_circuit.gif")))
+        astable_circuit_label = Label(graph, image=astable_circuit)
+        astable_circuit_label.image = astable_circuit
+        astable_circuit_label.grid(row=1, column=0, padx=10)
 
     def monostable(self):
         """
