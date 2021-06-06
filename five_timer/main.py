@@ -380,24 +380,15 @@ class Main:
 	
             # period == reciprocal of frequency
             raw_period = 1 / raw_frequency
-     		
-           	# period = str(round(raw_period, 4)) + " s"
-            period = str(round(raw_period / 60)) + " mins" if raw_period >= 60 else str(round(raw_period, 4)) + " s"
+            period = str(round(raw_period / 60, 4)) + " mins" if raw_period >= 60 else str(round(raw_period, 4)) + " s"
 
             # high time -> charge time
             raw_high_time = 0.693 * (resistance_one + resistance_two) * capacitor
-            raw_high_time = round(raw_high_time, 4)
-            high_time = str(raw_high_time) + " s"
+            high_time = str(round(raw_high_time/60, 4)) + " min(s)" if raw_high_time >= 60 else str(round(raw_high_time, 4)) + " s"
 
             # low time -> discharge time
             low_time = 0.693 * resistance_two * capacitor
-            low_time = round(low_time, 4)
-            low_time = str(low_time) + " s"
-
-            # duty cycle
-            # duty = (raw_high_time / raw_period) * 100
-            # duty = round(duty, 4)
-            # duty = str(duty) + " %"
+            low_time = str(round(low_time, 4)) + " s"
 
             # duty cycle - > correct duty cycle
             duty = (resistance_two) / ((resistance_one) + 2*resistance_two)
