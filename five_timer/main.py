@@ -51,13 +51,15 @@ class Main:
             "bg": "#303030",
             "fg": "white",
             "font": ("sans-serif", 10),
-            "width": 10,
+            "width": 15,
             "relief": FLAT
         }
 
         self.button_config = {
             "bg": "#4a4a4a",
+            "fg": "#0f9d58",
             "relief": FLAT,
+            "font": ("sans-serif", 10, "bold")
         }
 
         self.myParent.config(bg="#303030")
@@ -81,16 +83,16 @@ class Main:
          # ==============MENU========================================================
         menubar = Menu(self.myParent)
         menu_graph = Menu(menubar, tearoff=0)
-        menubar.add_cascade(menu=menu_graph, label="nomographs")  
+        menubar.add_cascade(menu=menu_graph, label="Nomographs")  
         menu_graph.add_command(label="monostable", command=self.open_monostable_nomograph)
         menu_graph.add_command(label="astable", command=self.open_astable_nomograph)
 
         pinout_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(menu=pinout_menu, label="pinout")
+        menubar.add_cascade(menu=pinout_menu, label="Pinout")
         pinout_menu.add_command(label="IC pinout", command=self.open_pinout)
 
         circuits_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(menu=circuits_menu, label="circuits")
+        menubar.add_cascade(menu=circuits_menu, label="Circuits")
         circuits_menu.add_command(label="monostable", command =  self.open_monostable_circuit)
         circuits_menu.add_command(label="astable",command =  self.open_astable_circuit)
 
@@ -102,24 +104,24 @@ class Main:
         # frame 1
         Label(self.frame1, self.label_config, text="Monostable mode", font=("bold")).grid(row=0, column=1)
 
-        self.monostable_resistor = Label(self.frame1, self.label_config, text="R1:")
-        self.monostable_resistor.config(width=2)
+        self.monostable_resistor = Label(self.frame1, self.label_config, text="R1:  ")
+        #self.monostable_resistor.config(width=2)
         self.monostable_resistor.grid(row=2, column=0, pady=5, sticky="E")
 
         # Choose resistor range
         self.r_combo = ttk.Combobox(self.frame1, state="readonly", values=["Ohms", "K", "M"])
         self.r_combo.current(0)
-        self.r_combo.configure(background="#4a4a4a", width=5)
+        self.r_combo.configure(width=5)
         self.r_combo.grid(row=2, column=2, pady=5, sticky="W")
 
-        self.monostable_capacitor = Label(self.frame1, self.label_config, text="C1:")
-        self.monostable_capacitor.grid(row=3, column=0, pady=5, sticky="E")
+        self.monostable_capacitor = Label(self.frame1, self.label_config, text="C1:  ")
+        self.monostable_capacitor.grid(row=3, column=0, sticky="E")
 
         # Choose capacitor range
         self.mono_cap_combo = ttk.Combobox(self.frame1, state="readonly", values=["F", "mF", "uF", "nF", "pF"])
         self.mono_cap_combo.current(0)
         self.mono_cap_combo.config(background="#4a4a4a", width=5)
-        self.mono_cap_combo.grid(row=3, column=2, pady=5, sticky="W")
+        self.mono_cap_combo.grid(row=3, column=2, sticky="W")
 
         # R1 entry 
         self.monostable_resistor_entry = NumericEntry(self.frame1)
@@ -137,7 +139,7 @@ class Main:
         self.mono_calculate.grid(row=4, column=1)
 
         # Display the time on
-        self.mono_high_time = Label(self.frame1, self.label_config, text="time on:")
+        self.mono_high_time = Label(self.frame1, self.label_config, text="   Time on:")
         self.mono_high_time.grid(row=5, column=0)
 
         self.monostable_time_on = Entry(self.frame1, self.input_config)
@@ -150,9 +152,10 @@ class Main:
         # frame 3
         self.frame3 = Frame(self.myParent, background="#303030")
         
-        Label(self.frame3, self.label_config, text="Astable mode", font=("bold")).grid(row=1, column=1)
-        self.astable_resistor_one = Label(self.frame3, self.label_config, text="R1:")
-        self.astable_resistor_one.grid(row=2, column=0, sticky="E", pady=5)
+        Label(self.frame3, self.label_config, text="   Astable mode   ", font=("bold")).grid(row=1, column=1)
+        
+        self.astable_resistor_one = Label(self.frame3, self.label_config, text="R1:  ")
+        self.astable_resistor_one.grid(row=2, column=0, pady=5, sticky="E")
 
         # Choose resistor one range
         self.r1_combo = ttk.Combobox(self.frame3, state="readonly", values=["Ohms", "K", "M"])
@@ -161,7 +164,7 @@ class Main:
         self.r1_combo.grid(row="2", column="2", sticky="W", pady=5)
 
         # resistor two label
-        self.astable_resistor_two = Label(self.frame3, self.label_config, text="R2:")
+        self.astable_resistor_two = Label(self.frame3, self.label_config, text="R2:   ")
         self.astable_resistor_two.grid(row=3, column=0, sticky="E", pady=5)
 
         # Choose resistor two range
@@ -171,7 +174,7 @@ class Main:
         self.r2_combo.grid(row=3, column=2, pady=5)
 
         # astable mode capacitor values
-        self.astable_capacitor = Label(self.frame3, self.label_config, text="C:")
+        self.astable_capacitor = Label(self.frame3, self.label_config, text="C:   ")
         self.astable_capacitor.grid(row=4, column=0, sticky="E", pady=5)
 
         # R1 entry 
@@ -252,7 +255,7 @@ class Main:
         graph = Toplevel(self.myParent)
         graph.title('astable nomograph')
 
-        free_graph = ImageTk.PhotoImage(Image.open(get_resource_path("five_timer", "resources/monostable_nomograph.gif")))
+        free_graph = ImageTk.PhotoImage(Image.open(get_resource_path("five_timer", "resources/astable_nomograph.gif")))
         graph_label = Label(graph, image=free_graph)
         graph_label.image = free_graph
         graph_label.grid(row=1, column=0, padx=10)
@@ -380,7 +383,7 @@ class Main:
 	
             # period == reciprocal of frequency
             raw_period = 1 / raw_frequency
-            period = str(round(raw_period / 60, 4)) + " mins" if raw_period >= 60 else str(round(raw_period, 4)) + " s"
+            period = str(round(raw_period / 60, 4)) + " min(s)" if raw_period >= 60 else str(round(raw_period, 4)) + " s"
 
             # high time -> charge time
             raw_high_time = 0.693 * (resistance_one + resistance_two) * capacitor
@@ -412,21 +415,14 @@ class Main:
             self.astable_time_high.insert(0, high_time)
             self.astable_time_low.insert(0, low_time)
 
-    def engineering_notation(self, raw_value):
-        """
-        convert the given value to engineering notation
-        """
-        if raw_value >= 1000000:
-            return str(raw_value / 1000) + " K"
-        elif 1000 <= raw_value < 1000000:
-            return str(raw_value / 1000000) + "M"
-
     def error_msg(self):
         """Show error message"""
         showwarning(title="Error", message="Enter numerical values only")
 
 def initialize():
     root = Tk()
+    root.geometry('310x500') # perfect geometry?
+    root.resizable(False, False) # no resizing
     main = Main(root)
 
     # setting window icon
