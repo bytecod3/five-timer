@@ -75,7 +75,7 @@ class Main:
             "mF": 0.001,
             "uF": 0.000001,
             "nF": 0.000000001,
-            "pf": 0.000000000001
+            "pF": 0.000000000001
         }
 
          # ==============MENU========================================================
@@ -359,16 +359,30 @@ class Main:
             capacitor *= self.capacitor_range[cap_range]
 
             # frequency
-            raw_frequency = 1.44 / (float(resistance_one) + 2 * float(resistance_two)) * float(capacitor)
+            raw_frequency = 1.44 / ((resistance_one + 2 * resistance_two) * capacitor)
+            frequency = raw_frequency
+ 
+            if 1000 <= frequency <= 999999:
+            	# KiloHertz
+            	
+            	frequency  = str(round(frequency / 1000, 4)) + " kHz"
+            
+            elif 1000000 <= frequency <= 999999999:
+            	# MegaHertz
+            	frequency = str(round(frequency / 1000000, 4)) + " MHz"
+            	
+            elif 1000000000 <= frequency <= 999999999999:
+            	# Gigahertz
+            	frequency = str(round(frequency / 1000000000, 4)) + " GHz"
+            else:
+            	frequency = str(round(frequency, 4)) + " Hz"
 
-
-            frequency = str(raw_frequency) + " Hz"
-            # todo: convert frequency to engineering notation
-
+	
             # period == reciprocal of frequency
             raw_period = 1 / raw_frequency
-            raw_period = round(raw_period, 4)
-            period = str(raw_period) + " s"
+     		
+           	# period = str(round(raw_period, 4)) + " s"
+            period = str(round(raw_period / 60)) + " mins" if raw_period >= 60 else str(round(raw_period, 4)) + " s"
 
             # high time -> charge time
             raw_high_time = 0.693 * (resistance_one + resistance_two) * capacitor
